@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
 
 
@@ -9,9 +9,9 @@ provider "aws" {
 #  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 #}
 
-#Create VPC in us-east-1
+#Create VPC in us-east-2
 resource "aws_vpc" "vpc" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = "192.168.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
@@ -20,7 +20,7 @@ resource "aws_vpc" "vpc" {
 
 }
 
-#Create IGW in us-east-1
+#Create IGW in us-east-2
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 }
@@ -36,7 +36,7 @@ data "aws_route_table" "main_route_table" {
     values = [aws_vpc.vpc.id]
   }
 }
-#Create route table in us-east-1
+#Create route table in us-east-2
 resource "aws_default_route_table" "internet_route" {
   default_route_table_id = data.aws_route_table.main_route_table.id
   route {
@@ -57,7 +57,7 @@ data "aws_availability_zones" "azs" {
 resource "aws_subnet" "subnet" {
   availability_zone = element(data.aws_availability_zones.azs.names, 0)
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = "192.168.10.0/24"
 }
 
 
